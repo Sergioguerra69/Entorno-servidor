@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Personas</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+      }
+      .person-item {
+        background: white;
+        margin: 15px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .person-link {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .person-link:hover {
+        color: #0056b3;
+      }
+      .person-photo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 2px solid #ddd;
+      }
+      .photo-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #888;
+        font-size: 12px;
+        border: 2px solid #ddd;
+      }
+      .person-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .person-info {
+        margin-left: 15px;
+      }
+      .person-email {
+        color: #666;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lista de Personas</h1>
+
+    {% for person in persons %}
+    <div class="person-item">
+      <div class="person-header">
+        {% if person.propic %}
+        <img
+          src="{{ person.propic.url }}"
+          alt="{{ person.name }}"
+          class="person-photo"
+        />
+        {% else %}
+        <div class="photo-placeholder">Sin foto</div>
+        {% endif %}
+
+        <div>
+          <a
+            href="{% url 'miproyecto:person' slug=person.slug %}"
+            class="person-link"
+          >
+            {{ person.name }}
+          </a>
+          <div class="person-email">{{ person.mail }}</div>
+        </div>
+      </div>
+      <p><strong>Fecha de nacimiento:</strong> {{ person.birth }}</p>
+    </div>
+    {% empty %}
+    <p>No hay personas registradas.</p>
+    {% endfor %}
+  </body>
+</html>

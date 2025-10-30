@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="{% url 'users:home' %}" class="text-xl font-bold">2ºdaw</a>
+        <div class="flex space-x-4">
+          <a
+            href="{% url 'users:register' %}"
+            class="bg-blue-500 px-3 py-1 rounded"
+            >Registrarse</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mx-auto mt-8 max-w-md">
+      <h1 class="text-3xl font-bold text-center mb-8">Iniciar Sesión</h1>
+
+      <form class="bg-white p-6 rounded-lg shadow-md" method="post">
+        {% csrf_token %} {% if request.GET.next %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}" />
+        {% endif %}
+
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            Nombre de usuario
+          </label>
+          {{ form.username }}
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            Contraseña
+          </label>
+          {{ form.password }}
+        </div>
+
+        {% if form.errors %}
+        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          Usuario o contraseña incorrectos.
+        </div>
+        {% endif %}
+
+        <button
+          type="submit"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+        >
+          Iniciar Sesión
+        </button>
+      </form>
+
+      <p class="text-center mt-4">
+        ¿No tienes cuenta?
+        <a
+          href="{% url 'users:register' %}"
+          class="text-blue-500 hover:text-blue-700"
+          >Regístrate aquí</a
+        >
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nuestros Usuarios</title>
+    <style>
+      body {
+        font-family: Arial;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .user-card {
+        background: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Nuestros Usuarios</h1>
+
+    {% for usuario in usuarios %}
+    <div class="user-card">
+      <h3>{{ usuario.first_name }} {{ usuario.last_name }}</h3>
+      <p><strong>Email:</strong> {{ usuario.email }}</p>
+      <p><strong>Username:</strong> {{ usuario.username }}</p>
+    </div>
+    {% empty %}
+    <p>No hay usuarios registrados.</p>
+    {% endfor %}
+  </body>
+</html>

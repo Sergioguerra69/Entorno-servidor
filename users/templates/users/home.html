@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio - MiSitio</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      .navbar {
+        background-color: #2c3e50;
+        padding: 15px;
+        color: white;
+      }
+
+      .nav-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .user-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .btn-login {
+        background-color: #27ae60;
+        color: white;
+      }
+
+      .btn-register {
+        background-color: #3498db;
+        color: white;
+      }
+
+      .btn-logout {
+        background-color: #e74c3c;
+        color: white;
+      }
+
+      .btn-products {
+        background-color: #f39c12;
+        color: white;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+      }
+
+      .message {
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+      }
+
+      .info {
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+      }
+
+      .actions {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        color: #7f8c8d;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-content">
+        <div class="logo">Inicio</div>
+        <div class="user-section">
+          {% if user.is_authenticated %}
+          <span>Bienvenido, {{ user.username }}</span>
+          <!-- BOTÓN DE PRODUCTOS AGREGADO AQUÍ -->
+          <a href="{% url 'productos:lista' %}" class="btn btn-products"
+            >Ver Productos</a
+          >
+          <form action="{% url 'users:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-logout">Cerrar Sesión</button>
+          </form>
+          {% else %}
+          <a href="{% url 'users:login' %}" class="btn btn-login"
+            >Iniciar Sesión</a
+          >
+          <a href="{% url 'users:register' %}" class="btn btn-register"
+            >Registrarse</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1>Bienvenido</h1>
+
+      {% if user.is_authenticated %}
+      <div class="message success">
+        <p><strong>¡Hola {{ user.username }}!</strong></p>
+        <p>Has iniciado sesión correctamente.</p>
+      </div>
+      <p style="text-align: center">
+        Funcionalidad de autenticación completada (TASK 8).
+      </p>
+
+      <div class="actions">
+        <a href="{% url 'productos:lista' %}" class="btn btn-products"
+          >Ir a Productos</a
+        >
+      </div>
+      {% else %}
+      <div class="message info">
+        <p><strong>No has iniciado sesión</strong></p>
+        <p>
+          Por favor inicia sesión o regístrate para acceder a todas las
+          funciones.
+        </p>
+      </div>
+      <div class="actions">
+        <a href="{% url 'users:login' %}" class="btn btn-login"
+          >Iniciar Sesión</a
+        >
+        <a href="{% url 'users:register' %}" class="btn btn-register"
+          >Registrarse</a
+        >
+      </div>
+      {% endif %}
+
+      <div class="footer">
+        <p>Sistema desarrollado como parte del TASK 8 - Autenticación</p>
+        <p>2º DAW - Desarrollo de Aplicaciones Web</p>
+      </div>
+    </div>
+  </body>
+</html>

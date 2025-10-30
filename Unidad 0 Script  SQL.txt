@@ -1,0 +1,38 @@
+CREATE TABLE autores (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    firma VARCHAR(50),
+    nacimiento INT,
+    fallecimiento INT,
+    pais VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE libros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(200) NOT NULL,
+    genero VARCHAR(50),
+    descripcion TEXT,
+    anio_publicacion INT,
+    autor_id INT,
+    isbn VARCHAR(20) UNIQUE
+);
+
+INSERT INTO autores (nombre, firma, nacimiento, fallecimiento, pais) VALUES
+('Carlos Ruiz', 'CR', 1975, NULL, 'España'),
+('Emily Stone', 'ES', 1960, NULL, 'Estados Unidos'),
+('Hiroshi Tanaka', 'HT', 1952, NULL, 'Japón'),
+('Anna Müller', 'AM', 1970, NULL, 'Alemania'),
+('Jean Dupont', 'JD', 1945, 2010, 'Francia');
+
+INSERT INTO libros (titulo, genero, descripcion, anio_publicacion, autor_id, isbn) VALUES
+('La sombra del miedo', 'Thriller', 'Un thriller psicológico lleno de giros.', 2010, 1, '978-1111111111'),
+('El susurro del bosque', 'Fantasía', 'Una aventura mágica en un bosque encantado.', 1995, 2, '978-2222222222'),
+('El código del dragón', 'Ciencia Ficción', 'Historia futurista con misterios.', 2005, 3, '978-3333333333'),
+('Sombras en Berlín', 'Drama', 'Relato sobre la vida en Berlín.', 1998, 4, '978-4444444444'),
+('El café de París', 'Romance', 'Un romance en el corazón de París.', 1985, 5, '978-5555555555');
+
+SELECT titulo, genero FROM libros  WHERE genero = 'Thriller';
+
+SELECT l.titulo, a.nombre, a.pais FROM libros l, autores a WHERE l.autor_id = a.id AND a.pais = 'España';
+
+SELECT titulo, anio_publicacion FROM libros WHERE anio_publicacion = 1995;

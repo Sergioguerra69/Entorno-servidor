@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static tailwind_tags %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Home Page{% endblock %}</title>
+    {% tailwind_css %}
+  </head>
+  <body
+    class="bg-blue-100 dark:bg-blue-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-500"
+  >
+    <nav
+      class="bg-blue-500 dark:bg-blue-700 shadow-lg fixed w-full top-0 z-50 flex justify-between items-center px-8 py-4"
+    >
+      <a
+        href="/"
+        class="text-2xl font-bold text-indigo-100 dark:text-indigo-300"
+      >
+        Inicio
+      </a>
+
+      <a
+        href="/juegos"
+        class="px-4 py-2 rounded-md bg-indigo-600 dark:bg-indigo-500 text-white font-semibold hover:bg-indigo-500 dark:hover:bg-indigo-400 transition"
+      >
+        Juegos
+      </a>
+    </nav>
+
+    <main class="container mx-auto px-8 pt-40">
+      {% block content %}
+      <section
+        class="flex flex-col items-center justify-center min-h-screen text-center space-y-8"
+      >
+        <h1
+          class="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight"
+        >
+          Bienvenido
+        </h1>
+        <p
+          class="max-w-2xl text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed"
+        >
+          Mi pagina web. pd:Apruebame plis :/
+        </p>
+      </section>
+      {% endblock %}
+    </main>
+    <footer
+      class="bg-gray-200 dark:bg-gray-800 mt-20 py-6 text-center text-gray-700 dark:text-gray-300"
+    ></footer>
+  </body>
+</html>
