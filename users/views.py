@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 
+def home_view(request):
+    return render(request, 'users/home.html')
+
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -33,5 +36,3 @@ def logout_view(request):
         return redirect('users:home')
     return redirect('users:home')
 
-def home_view(request):
-    return render(request, 'users/home.html')
