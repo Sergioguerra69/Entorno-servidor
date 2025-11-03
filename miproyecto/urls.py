@@ -21,5 +21,6 @@ app_name = 'miproyecto'
 
 urlpatterns = [
     path('', views.homepage, name='home'),
-    path('<slug:slug>/', views.person_detail, name='person'),
+    path('person/<slug:slug>/', views.person_detail, name='person'),
+   
 ]

@@ -25,6 +25,8 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
     path('productos/', include('productos.urls')),
+     path('accounts/', include('django.contrib.auth.urls')),
+     path('games/', include('games.urls')),
 ]
 
 if settings.DEBUG:

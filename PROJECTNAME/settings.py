@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'theme', 
     'users',
     'productos',
+    'games',
     'django_browser_reload',
 ]
 
@@ -79,7 +80,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+LOGIN_REDIRECT_URL = '/games/'
 NPM_BIN_PATH = "C:/Users/Usuario/Downloads/Colegio/2ºaño/entorno cliente/npm.cmd"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
