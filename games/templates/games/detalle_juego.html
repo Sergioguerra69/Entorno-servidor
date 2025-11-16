@@ -11,7 +11,6 @@
         padding: 20px;
         background-color: #f0f2f5;
       }
-
       .contenedor {
         max-width: 600px;
         margin: 0 auto;
@@ -21,14 +20,6 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         text-align: center;
       }
-
-      .info-juego {
-        margin-bottom: 20px;
-        padding: 15px;
-        background: #f8f9fa;
-        border-radius: 5px;
-      }
-
       .tablero {
         display: grid;
         grid-template-columns: repeat(3, 80px);
@@ -37,7 +28,6 @@
         margin: 20px auto;
         width: 250px;
       }
-
       .casilla {
         width: 80px;
         height: 80px;
@@ -51,20 +41,10 @@
         border-radius: 5px;
         font-weight: bold;
       }
-
-      .casilla:hover {
-        background: #ecf0f1;
-      }
-
-      .casilla-vacia {
-        cursor: default;
+      .casilla:disabled {
+        cursor: not-allowed;
         background: #f8f9fa;
       }
-
-      .casilla-vacia:hover {
-        background: #f8f9fa;
-      }
-
       .boton {
         padding: 10px 20px;
         border: none;
@@ -75,128 +55,88 @@
         margin: 5px;
         color: white;
       }
-
       .boton-peligro {
         background: #e74c3c;
       }
       .boton-secundario {
         background: #95a5a6;
       }
-      .boton-jugar {
-        background: #3498db;
+      .boton-exito {
+        background: #27ae60;
       }
-
-      .estado-juego {
-        padding: 15px;
-        border-radius: 5px;
-        margin: 20px 0;
-        font-weight: bold;
-      }
-
-      .activo {
+      .info-turno {
         background: #d4edda;
-        color: #155724;
-      }
-      .gano {
-        background: #cce5ff;
-        color: #004085;
-      }
-      .empate {
-        background: #fff3cd;
-        color: #856404;
-      }
-
-      .navegacion {
-        background: #2c3e50;
-        padding: 15px;
-        color: white;
-        margin-bottom: 20px;
+        padding: 10px;
         border-radius: 5px;
-      }
-
-      .contenido-navegacion {
-        max-width: 600px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      form {
-        display: inline;
+        margin: 10px 0;
       }
     </style>
   </head>
   <body>
-    <!-- Barra de navegación -->
-    <div class="navegacion">
-      <div class="contenido-navegacion">
-        <h2 style="margin: 0; color: white">Tic Tac Toe</h2>
-        <div>
-          <span>Jugador: {{ user.username }}</span>
-          <a
-            href="{% url 'games:lista_juegos' %}"
-            class="boton boton-secundario"
-            style="margin-left: 10px"
-            >Volver</a
-          >
-        </div>
-      </div>
-    </div>
-
-    <!-- Contenido principal del juego -->
     <div class="contenedor">
-      <!-- Información del juego -->
-      <div class="info-juego">
-        <h1 style="margin: 0; color: #2c3e50">{{ juego.nombre_sala }}</h1>
-        <p style="margin: 5px 0">
-          Creado por: {{ juego.propietario.username }}
-        </p>
-        <p style="margin: 5px 0">Jugador actual: {{ user.username }}</p>
-      </div>
+      <h1>{{ juego.nombre_sala }}</h1>
+      <p>Creado por: {{ juego.propietario.username }} (X)</p>
 
-      <!-- Estado del juego -->
-      <div
-        class="estado-juego {% if juego.estado_juego == 'ACTIVO' %}activo{% elif juego.estado_juego == 'EMPATE' %}empate{% else %}gano{% endif %}"
-      >
-        {% if juego.estado_juego == 'ACTIVO' %}
-        <h3>Turno de: {{ juego.jugador_actual }}</h3>
-        <p>Estado: Juego en curso</p>
-        {% elif juego.estado_juego == 'X_GANO' %}
-        <h3>¡Jugador X ha ganado!</h3>
-        {% elif juego.estado_juego == 'O_GANO' %}
-        <h3>¡Jugador O ha ganado!</h3>
-        {% elif juego.estado_juego == 'EMPATE' %}
-        <h3>¡Empate!</h3>
-        {% endif %}
+      <!-- JUGADOR O - VERSIÓN SIMPLIFICADA -->
+      <p>
+        Jugador O: {% if juego.jugador_o %} {{ juego.jugador_o.username }} {%
+        else %} Esperando... {% endif %}
+      </p>
+
+      <p>
+        Estado: {{ juego.estado_juego }} | Turno: {{ juego.jugador_actual }}
+      </p>
+
+      <!-- Información del turno -->
+      {% if juego.estado_juego == 'ACTIVO' %} {% if es_turno_actual %}
+      <div class="info-turno">
+        <strong>¡Es tu turno! Haz clic en una casilla vacía</strong>
       </div>
+      {% endif %} {% endif %}
+
+      <!-- Botón para unirse -->
+      {% if puede_unirse %}
+      <form method="post" style="margin: 15px 0">
+        {% csrf_token %}
+        <button type="submit" name="unirse" class="boton boton-exito">
+          Unirse como Jugador O
+        </button>
+      </form>
+      {% endif %}
 
       <!-- Tablero de juego -->
-      <!-- Envolver el tablero alrededor de un formulario como pide el ejercicio -->
-      {% if es_propietario and juego.estado_juego == 'ACTIVO' %}
+      {% if juego.estado_juego == 'ACTIVO' and es_jugador_en_partida %}
       <form method="post">
         {% csrf_token %}
         <div class="tablero">
-          {% for fila in tablero_array %} {% for casilla in fila %}
-          <!-- Cada casilla debe convertirse en un botón para que los usuarios puedan hacer clic -->
-          <!-- Cada botón debe ser un botón de envío con un valor diferente -->
+          {% for fila in tablero_array %} {% for casilla in fila %} {% with
+          index=forloop.parentloop.counter0|add:forloop.counter0|add:forloop.parentloop.counter0
+          %}
           <button
             type="submit"
             name="submit"
-            value="{{ forloop.parentloop.counter0|add:forloop.counter0|add:forloop.parentloop.counter0|add:forloop.parentloop.counter0 }}"
-            class="casilla {% if casilla == ' ' %}casilla-vacia{% endif %}"
+            value="{{ index }}"
+            class="casilla"
+            {%
+            if
+            not
+            puede_jugar
+            or
+            casilla
+            !=" "
+            %}disabled{%
+            endif
+            %}
           >
-            <!-- Mostrar X u O en las casillas ocupadas -->
             {% if casilla == 'X' %}X{% elif casilla == 'O' %}O{% endif %}
           </button>
-          {% endfor %} {% endfor %}
+          {% endwith %} {% endfor %} {% endfor %}
         </div>
       </form>
       {% else %}
-      <!-- Si no es el propietario, mostrar el juego tal como está -->
       <div class="tablero">
         {% for fila in tablero_array %} {% for casilla in fila %}
-        <div class="casilla casilla-vacia">
+        <div class="casilla">
           {% if casilla == 'X' %}X{% elif casilla == 'O' %}O{% endif %}
         </div>
         {% endfor %} {% endfor %}
@@ -205,8 +145,7 @@
 
       <!-- Botones de acción -->
       <div style="margin-top: 20px">
-        {% if es_propietario %}
-        <!-- Agregar un botón pequeño que cierra la sala (elimina la entrada en la base de datos) -->
+        {% if es_jugador_x %}
         <form method="post" style="display: inline">
           {% csrf_token %}
           <button type="submit" name="eliminar" class="boton boton-peligro">
@@ -215,7 +154,7 @@
         </form>
         {% endif %}
         <a href="{% url 'games:lista_juegos' %}" class="boton boton-secundario"
-          >Volver a la Lista</a
+          >Volver</a
         >
       </div>
     </div>

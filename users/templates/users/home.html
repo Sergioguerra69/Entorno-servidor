@@ -67,6 +67,11 @@
         color: white;
       }
 
+      .btn-games {
+        background-color: #9b59b6;
+        color: white;
+      }
+
       .container {
         max-width: 800px;
         margin: 40px auto;
@@ -106,6 +111,13 @@
         margin-top: 30px;
       }
 
+      .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
       .footer {
         text-align: center;
         margin-top: 40px;
@@ -121,7 +133,11 @@
         <div class="user-section">
           {% if user.is_authenticated %}
           <span>Bienvenido, {{ user.username }}</span>
-          <!-- BOTÓN DE PRODUCTOS AGREGADO AQUÍ -->
+          <!-- BOTÓN QUE LLEVA AL HOME DE GAMES -->
+          <a href="{% url 'games:home_games' %}" class="btn btn-games"
+            >Tres en Raya</a
+          >
+          <!-- BOTÓN DE PRODUCTOS -->
           <a href="{% url 'productos:lista' %}" class="btn btn-products"
             >Ver Productos</a
           >
@@ -154,9 +170,14 @@
       </p>
 
       <div class="actions">
-        <a href="{% url 'productos:lista' %}" class="btn btn-products"
-          >Ir a Productos</a
-        >
+        <div class="action-buttons">
+          <a href="{% url 'games:home_games' %}" class="btn btn-games"
+            >Jugar Tres en Raya</a
+          >
+          <a href="{% url 'productos:lista' %}" class="btn btn-products"
+            >Ir a Productos</a
+          >
+        </div>
       </div>
       {% else %}
       <div class="message info">
@@ -167,12 +188,14 @@
         </p>
       </div>
       <div class="actions">
-        <a href="{% url 'users:login' %}" class="btn btn-login"
-          >Iniciar Sesión</a
-        >
-        <a href="{% url 'users:register' %}" class="btn btn-register"
-          >Registrarse</a
-        >
+        <div class="action-buttons">
+          <a href="{% url 'users:login' %}" class="btn btn-login"
+            >Iniciar Sesión</a
+          >
+          <a href="{% url 'users:register' %}" class="btn btn-register"
+            >Registrarse</a
+          >
+        </div>
       </div>
       {% endif %}
 

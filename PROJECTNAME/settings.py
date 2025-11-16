@@ -13,12 +13,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
     'miproyecto',  
     'tailwind',
     'juegos',
     'theme', 
     'users',
+    'channels',
     'productos',
     'games',
     'django_browser_reload',
@@ -84,4 +86,5 @@ LOGIN_REDIRECT_URL = '/games/'
 NPM_BIN_PATH = "C:/Users/Usuario/Downloads/Colegio/2ºaño/entorno cliente/npm.cmd"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+ASGI_APPLICATION = 'PROJECTNAME.asgi.application'
 LOGIN_REDIRECT_URL = 'users:home'
