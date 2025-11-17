@@ -77,7 +77,6 @@
       <h1>{{ juego.nombre_sala }}</h1>
       <p>Creado por: {{ juego.propietario.username }} (X)</p>
 
-      <!-- JUGADOR O - VERSIÓN SIMPLIFICADA -->
       <p>
         Jugador O: {% if juego.jugador_o %} {{ juego.jugador_o.username }} {%
         else %} Esperando... {% endif %}
@@ -87,15 +86,11 @@
         Estado: {{ juego.estado_juego }} | Turno: {{ juego.jugador_actual }}
       </p>
 
-      <!-- Información del turno -->
-      {% if juego.estado_juego == 'ACTIVO' %} {% if es_turno_actual %}
+      {% if juego.estado_juego == 'ACTIVO' and es_turno_actual %}
       <div class="info-turno">
         <strong>¡Es tu turno! Haz clic en una casilla vacía</strong>
       </div>
-      {% endif %} {% endif %}
-
-      <!-- Botón para unirse -->
-      {% if puede_unirse %}
+      {% endif %} {% if puede_unirse %}
       <form method="post" style="margin: 15px 0">
         {% csrf_token %}
         <button type="submit" name="unirse" class="boton boton-exito">
@@ -104,18 +99,16 @@
       </form>
       {% endif %}
 
-      <!-- Tablero de juego -->
+      <!-- Tablero de juego SIN PROBLEMAS -->
       {% if juego.estado_juego == 'ACTIVO' and es_jugador_en_partida %}
       <form method="post">
         {% csrf_token %}
         <div class="tablero">
-          {% for fila in tablero_array %} {% for casilla in fila %} {% with
-          index=forloop.parentloop.counter0|add:forloop.counter0|add:forloop.parentloop.counter0
-          %}
+          {% for fila in tablero_array %} {% for casilla in fila %}
           <button
             type="submit"
             name="submit"
-            value="{{ index }}"
+            value="{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}"
             class="casilla"
             {%
             if
@@ -130,7 +123,7 @@
           >
             {% if casilla == 'X' %}X{% elif casilla == 'O' %}O{% endif %}
           </button>
-          {% endwith %} {% endfor %} {% endfor %}
+          {% endfor %} {% endfor %}
         </div>
       </form>
       {% else %}
@@ -143,7 +136,6 @@
       </div>
       {% endif %}
 
-      <!-- Botones de acción -->
       <div style="margin-top: 20px">
         {% if es_jugador_x %}
         <form method="post" style="display: inline">
