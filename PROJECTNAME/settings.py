@@ -88,3 +88,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 ASGI_APPLICATION = 'PROJECTNAME.asgi.application'
 LOGIN_REDIRECT_URL = 'users:home'
+
+FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'

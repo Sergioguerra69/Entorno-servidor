@@ -28,21 +28,19 @@
         <input type="hidden" name="next" value="{{ request.GET.next }}" />
         {% endif %}
 
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Nombre de usuario
+        <!-- IMPLEMENTACIÓN EXACTA DEL EJERCICIO: for loop para cada field -->
+        {% for field in form %}
+        <div class="my_classes mb-4">
+          {{ field.errors }}
+          <label
+            for="{{ field.id_for_label }}"
+            class="block text-gray-700 text-sm font-bold mb-2"
+          >
+            {{ field.label }}
           </label>
-          {{ form.username }}
+          {{ field }}
         </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Contraseña
-          </label>
-          {{ form.password }}
-        </div>
-
-        {% if form.errors %}
+        {% endfor %} {% if form.errors %}
         <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
           Usuario o contraseña incorrectos.
         </div>

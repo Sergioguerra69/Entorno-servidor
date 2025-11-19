@@ -146,10 +146,21 @@
         <h3 style="margin-top: 0">Crear Nuevo Juego</h3>
         <form method="post">
           {% csrf_token %}
+
+          <!-- IMPLEMENTACIÓN EXACTA DEL EJERCICIO: for loop para cada field -->
+          {% for field in formulario %}
           <div class="grupo-formulario">
-            <label><strong>Nombre de la sala:</strong></label>
-            {{ formulario.nombre_sala }}
+            {{ field.errors }}
+            <label
+              for="{{ field.id_for_label }}"
+              style="display: block; margin-bottom: 5px; font-weight: bold"
+            >
+              {{ field.label }}
+            </label>
+            {{ field }}
           </div>
+          {% endfor %}
+
           <button type="submit" class="boton boton-primario">
             Crear Juego
           </button>

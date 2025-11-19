@@ -26,32 +26,19 @@
       <form class="bg-white p-6 rounded-lg shadow-md" method="post">
         {% csrf_token %}
 
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Nombre de usuario
+        <!-- IMPLEMENTACIÓN EXACTA DEL EJERCICIO: for loop para cada field -->
+        {% for field in form %}
+        <div class="my_classes mb-4">
+          {{ field.errors }}
+          <label
+            for="{{ field.id_for_label }}"
+            class="block text-gray-700 text-sm font-bold mb-2"
+          >
+            {{ field.label }}
           </label>
-          {{ form.username }} {% if form.username.errors %}
-          <p class="text-red-500 text-xs mt-1">{{ form.username.errors.0 }}</p>
-          {% endif %}
+          {{ field }}
         </div>
-
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Contraseña
-          </label>
-          {{ form.password1 }} {% if form.password1.errors %}
-          <p class="text-red-500 text-xs mt-1">{{ form.password1.errors.0 }}</p>
-          {% endif %}
-        </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Confirmar contraseña
-          </label>
-          {{ form.password2 }} {% if form.password2.errors %}
-          <p class="text-red-500 text-xs mt-1">{{ form.password2.errors.0 }}</p>
-          {% endif %}
-        </div>
+        {% endfor %}
 
         <button
           type="submit"
