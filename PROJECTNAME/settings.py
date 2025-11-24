@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     'productos',
     'games',
     'django_browser_reload',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [

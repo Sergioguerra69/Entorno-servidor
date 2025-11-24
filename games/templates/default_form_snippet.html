@@ -1,0 +1,13 @@
+<!-- templates/default_form_snippet.html -->
+<!DOCTYPE html>
+<html lang="es">
+{% for field in form %}
+<div class="my_classes">
+    {{ field.errors }}
+    <label for="{{ field.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">
+        {{ field.label }}
+    </label>
+    {{ field }}
+</div>
+{% endfor %}
+</html>
