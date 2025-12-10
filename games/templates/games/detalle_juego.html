@@ -1,154 +1,735 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe - {{ juego.nombre_sala }}</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #f0f2f5;
-      }
-      .contenedor {
-        max-width: 600px;
-        margin: 0 auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-      }
-      .tablero {
-        display: grid;
-        grid-template-columns: repeat(3, 80px);
-        grid-template-rows: repeat(3, 80px);
-        gap: 5px;
-        margin: 20px auto;
-        width: 250px;
-      }
-      .casilla {
-        width: 80px;
-        height: 80px;
-        border: 2px solid #34495e;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        cursor: pointer;
-        background: white;
-        border-radius: 5px;
-        font-weight: bold;
-      }
-      .casilla:disabled {
-        cursor: not-allowed;
-        background: #f8f9fa;
-      }
-      .boton {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 14px;
-        margin: 5px;
-        color: white;
-      }
-      .boton-peligro {
-        background: #e74c3c;
-      }
-      .boton-secundario {
-        background: #95a5a6;
-      }
-      .boton-exito {
-        background: #27ae60;
-      }
-      .info-turno {
-        background: #d4edda;
-        padding: 10px;
-        border-radius: 5px;
-        margin: 10px 0;
-      }
+        /* estilos CSS  */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .contenedor {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .estado-conexion {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .conectado {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .desconectado {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info-juego {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-caja {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .tablero-contenedor {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .tablero {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 5px;
+            margin: 0 auto;
+            width: 250px;
+        }
+        
+        .casilla {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #343a40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            background: white;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .casilla:hover:not(:disabled) {
+            background: #e9ecef;
+        }
+        
+        .casilla:disabled {
+            cursor: not-allowed;
+            background: #f8f9fa;
+            opacity: 0.7;
+        }
+        
+        .casilla.x {
+            color: #dc3545;
+        }
+        
+        .casilla.o {
+            color: #007bff;
+        }
+        
+        .mensaje-ganador {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 15px 0;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .turno-actual {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 10px 0;
+            border: 1px solid #bee5eb;
+        }
+        
+        .botones {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .boton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            color: white;
+            transition: opacity 0.2s;
+        }
+        
+        .boton-peligro {
+            background: #dc3545;
+        }
+        
+        .boton-secundario {
+            background: #6c757d;
+        }
+        
+        .boton-exito {
+            background: #28a745;
+        }
+        
+        .boton:hover {
+            opacity: 0.9;
+        }
+
+        .unirse-contenedor {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
-  </head>
-  <body>
-    <div class="contenedor">
-      <h1>{{ juego.nombre_sala }}</h1>
-      <p>Creado por: {{ juego.propietario.username }} (X)</p>
-
-      <p>
-        Jugador O: {% if juego.jugador_o %} {{ juego.jugador_o.username }} {%
-        else %} Esperando... {% endif %}
-      </p>
-
-      <p>
-        Estado: {{ juego.estado_juego }} | Turno: {{ juego.jugador_actual }}
-      </p>
-
-      {% if juego.estado_juego == 'ACTIVO' and es_turno_actual %}
-      <div class="info-turno">
-        <strong>¡Es tu turno! Haz clic en una casilla vacía</strong>
-      </div>
-      {% endif %} {% if puede_unirse %}
-      <form method="post" style="margin: 15px 0">
-        {% csrf_token %}
-        <button type="submit" name="unirse" class="boton boton-exito">
-          Unirse como Jugador O
-        </button>
-      </form>
-      {% endif %}
-
-      <!-- Tablero de juego SIN PROBLEMAS -->
-      {% if juego.estado_juego == 'ACTIVO' and es_jugador_en_partida %}
-      <form method="post">
-        {% csrf_token %}
-        <div class="tablero">
-          {% for fila in tablero_array %} {% for casilla in fila %}
-          <button
-            type="submit"
-            name="submit"
-            value="{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}"
-            class="casilla"
-            {%
-            if
-            not
-            puede_jugar
-            or
-            casilla
-            !=" "
-            %}disabled{%
-            endif
-            %}
-          >
-            {% if casilla == 'X' %}X{% elif casilla == 'O' %}O{% endif %}
-          </button>
-          {% endfor %} {% endfor %}
-        </div>
-      </form>
-      {% else %}
-      <div class="tablero">
-        {% for fila in tablero_array %} {% for casilla in fila %}
-        <div class="casilla">
-          {% if casilla == 'X' %}X{% elif casilla == 'O' %}O{% endif %}
-        </div>
-        {% endfor %} {% endfor %}
-      </div>
-      {% endif %}
-
-      <div style="margin-top: 20px">
-        {% if es_jugador_x %}
-        <form method="post" style="display: inline">
-          {% csrf_token %}
-          <button type="submit" name="eliminar" class="boton boton-peligro">
-            Eliminar Sala
-          </button>
-        </form>
-        {% endif %}
-        <a href="{% url 'games:lista_juegos' %}" class="boton boton-secundario"
-          >Volver</a
-        >
-      </div>
+</head>
+<body>
+    <!-- Datos Django como JSON en elemento hidden -->
+    <div id="django-data" 
+         data-juego-activo="{% if juego.estado_juego == 'ACTIVO' %}true{% else %}false{% endif %}"
+         data-puede-jugar="{% if es_turno_actual %}true{% else %}false{% endif %}"
+         data-nombre-sala="{{ juego.nombre_sala }}"
+         data-usuario-actual="{{ user.username }}"
+         style="display: none;">
     </div>
-  </body>
+
+    <div class="contenedor">
+        <div class="header">
+            <h1>Tic Tac Toe - {{ juego.nombre_sala }}</h1>
+            <div id="conexion-status" class="estado-conexion desconectado">
+                Desconectado
+            </div>
+        </div>
+
+        <div class="info-juego">
+            <div class="info-caja">
+                <h3>Creador</h3>
+                <p id="propietario">{{ juego.propietario.username }} (X)</p>
+            </div>
+            
+            <div class="info-caja">
+                <h3>Jugador O</h3>
+                <p id="jugador-o">
+                    {% if juego.jugador_o %}
+                        {{ juego.jugador_o.username }}
+                    {% else %}
+                        Esperando...
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="info-caja">
+                <h3>Estado</h3>
+                <p id="estado-juego">{{ juego.estado_juego }}</p>
+            </div>
+            
+            <div class="info-caja">
+                <h3>Turno Actual</h3>
+                <p id="turno-actual">{{ juego.jugador_actual }}</p>
+            </div>
+        </div>
+
+        {% if puede_unirse %}
+        <div class="unirse-contenedor">
+            <form method="post" id="form-unirse">
+                {% csrf_token %}
+                <button type="submit" name="unirse" class="boton boton-exito">
+                    Unirse como Jugador O
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div id="mensaje-turno" class="turno-actual {% if not es_turno_actual or juego.estado_juego != 'ACTIVO' %}hidden{% endif %}">
+            ¡Es tu turno! Haz clic en una casilla vacía
+        </div>
+
+        <div id="mensaje-ganador" class="mensaje-ganador hidden"></div>
+
+        <div class="tablero-contenedor">
+            <div class="tablero" id="tablero-juego">
+                {% for fila in tablero_array %}
+                    {% for casilla in fila %}
+                        <button type="button" 
+                                class="casilla {% if casilla == 'X' %}x{% elif casilla == 'O' %}o{% endif %}"
+                                data-fila="{{ forloop.parentloop.counter0 }}"
+                                data-columna="{{ forloop.counter0 }}">
+                            {% if casilla == 'X' %}X{% elif casilla == 'O' %}O{% endif %}
+                        </button>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Formulario oculto para fallback -->
+        <form method="post" id="form-movimiento-fallback" class="hidden">
+            {% csrf_token %}
+            <input type="hidden" name="posicion" id="input-posicion">
+        </form>
+
+        <div class="botones">
+            {% if es_jugador_x %}
+            <form method="post" id="form-eliminar">
+                {% csrf_token %}
+                <button type="submit" name="eliminar" class="boton boton-peligro" id="btn-eliminar">
+                    Eliminar Sala
+                </button>
+            </form>
+            {% endif %}
+            <a href="{% url 'games:lista_juegos' %}" class="boton boton-secundario">
+                Volver al Lobby
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Obtener datos de Django desde el elemento hidden
+        const djangoData = document.getElementById('django-data');
+        
+        // Variables globales
+        let gameSocket = null;
+        let juegoActivo = djangoData.dataset.juegoActivo === 'true';
+        let puedeJugarActual = djangoData.dataset.puedeJugar === 'true';
+        const nombreSala = djangoData.dataset.nombreSala;
+        const usuarioActual = djangoData.dataset.usuarioActual;
+        let eventListenersInicializados = false;
+
+        // Elementos DOM
+        const conexionStatus = document.getElementById('conexion-status');
+        const mensajeTurno = document.getElementById('mensaje-turno');
+        const mensajeGanador = document.getElementById('mensaje-ganador');
+        const tableroJuego = document.getElementById('tablero-juego');
+        const formMovimientoFallback = document.getElementById('form-movimiento-fallback');
+        const inputPosicion = document.getElementById('input-posicion');
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Inicializando juego Tic Tac Toe...');
+            console.log('Sala:', nombreSala);
+            console.log('Usuario:', usuarioActual);
+            console.log('Juego activo:', juegoActivo);
+            console.log('Puede jugar actual:', puedeJugarActual);
+            
+            inicializarEventListeners();
+            conectarWebSocket();
+            
+            // Eventos de conectividad
+            window.addEventListener('online', manejarConexionOnline);
+            window.addEventListener('offline', manejarConexionOffline);
+        });
+
+        function inicializarEventListeners() {
+            if (eventListenersInicializados) {
+                console.log('Event listeners ya estaban inicializados, limpiando...');
+                limpiarEventListeners();
+            }
+
+            console.log('Buscando botones del tablero...');
+            
+            // Event listener para el botón de eliminar
+            const btnEliminar = document.getElementById('btn-eliminar');
+            if (btnEliminar) {
+                btnEliminar.addEventListener('click', function(e) {
+                    if (!confirm('¿Estás seguro de eliminar esta sala?')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            // Verificar si el tablero existe
+            if (!tableroJuego) {
+                console.error('ERROR: No se encontró el elemento tablero-juego');
+                return;
+            }
+
+            // Buscar botones dentro del tablero
+            const botones = tableroJuego.querySelectorAll('.casilla');
+            console.log('Botones encontrados en el tablero:', botones.length);
+
+            // Event listeners para las casillas del tablero - SOLO UNA VEZ
+            botones.forEach((boton, index) => {
+                const fila = parseInt(boton.getAttribute('data-fila'));
+                const columna = parseInt(boton.getAttribute('data-columna'));
+                
+                console.log('Boton ' + index + ': [' + fila + ',' + columna + '] - Disabled: ' + boton.disabled);
+                
+                // Remover event listeners existentes
+                boton.replaceWith(boton.cloneNode(true));
+                const nuevoBoton = tableroJuego.querySelectorAll('.casilla')[index];
+                
+                nuevoBoton.addEventListener('click', function() {
+                    manejarClickCasilla(fila, columna, nuevoBoton);
+                });
+            });
+
+            eventListenersInicializados = true;
+            console.log('Event listeners inicializados correctamente');
+            console.log('Casillas habilitadas:', tableroJuego.querySelectorAll('.casilla:not(:disabled)').length);
+        }
+
+        function limpiarEventListeners() {
+            const botones = tableroJuego.querySelectorAll('.casilla');
+            botones.forEach(boton => {
+                boton.replaceWith(boton.cloneNode(true));
+            });
+        }
+
+        function manejarClickCasilla(fila, columna, boton) {
+            console.log('=== CLICK EN CASILLA ===');
+            console.log('Posicion:', 'Fila ' + fila + ', Columna ' + columna);
+            console.log('Posicion calculada (0-8):', fila * 3 + columna);
+            console.log('WebSocket estado:', gameSocket ? gameSocket.readyState : 'null');
+            console.log('Juego activo:', juegoActivo);
+            console.log('Puede jugar:', puedeJugarActual);
+            
+            // Validaciones antes de enviar
+            if (!validarMovimiento(fila, columna, boton)) {
+                return;
+            }
+            
+            hacerMovimientoWebSocket(fila, columna, boton);
+        }
+
+        function validarMovimiento(fila, columna, boton) {
+            if (!gameSocket || gameSocket.readyState !== WebSocket.OPEN) {
+                console.log('WebSocket no conectado');
+                mostrarError('No hay conexión con el servidor');
+                return false;
+            }
+
+            if (!juegoActivo) {
+                console.log('Juego no activo');
+                mostrarError('El juego no está activo');
+                return false;
+            }
+
+            if (!puedeJugarActual) {
+                console.log('No es tu turno');
+                mostrarError('No es tu turno para jugar');
+                return false;
+            }
+
+            if (boton.disabled) {
+                console.log('Casilla ya ocupada');
+                return false;
+            }
+
+            const valor = boton.textContent.trim();
+            if (valor !== '') {
+                console.log('Casilla no vacía:', valor);
+                return false;
+            }
+
+            return true;
+        }
+
+        function conectarWebSocket() {
+            const protocolo = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const urlWs = protocolo + '//' + window.location.host + '/ws/tictactoe/' + encodeURIComponent(nombreSala) + '/';
+            
+            console.log('Intentando conectar a WebSocket:', urlWs);
+            
+            try {
+                gameSocket = new WebSocket(urlWs);
+
+                gameSocket.onopen = function(e) {
+                    console.log('Conectado al juego via WebSocket');
+                    actualizarEstadoConexion(true);
+                };
+
+                gameSocket.onclose = function(e) {
+                    console.log('Desconectado del juego:', e.code, e.reason);
+                    actualizarEstadoConexion(false);
+                    
+                    // Reconectar después de 3 segundos si no fue un cierre normal
+                    if (e.code !== 1000) {
+                        setTimeout(function() {
+                            if (!gameSocket || gameSocket.readyState === WebSocket.CLOSED) {
+                                console.log('Reconectando WebSocket...');
+                                conectarWebSocket();
+                            }
+                        }, 3000);
+                    }
+                };
+
+                gameSocket.onmessage = function(e) {
+                    try {
+                        console.log('Mensaje WebSocket recibido (raw):', e.data);
+                        const data = JSON.parse(e.data);
+                        procesarMensajeWebSocket(data);
+                    } catch (error) {
+                        console.error('Error procesando mensaje WebSocket:', error, e.data);
+                        // Intentar parsear como string si JSON falla
+                        procesarMensajeTexto(e.data);
+                    }
+                };
+
+                gameSocket.onerror = function(e) {
+                    console.error('Error en WebSocket:', e);
+                    actualizarEstadoConexion(false);
+                };
+            } catch (error) {
+                console.error('Error creando WebSocket:', error);
+            }
+        }
+
+        function procesarMensajeWebSocket(data) {
+            console.log('=== MENSAJE WEBSOCKET COMPLETO ===');
+            console.log('Tipo:', data.type);
+            console.log('Datos completos:', data);
+            
+            // Manejar diferentes estructuras de mensaje
+            if (data.type === 'game_state' || data.type === 'game_update') {
+                const estado = data.data || data;
+                procesarEstadoJuego(estado);
+            } 
+            else if (data.type === 'error') {
+                console.error('Error del servidor:', data.error);
+                mostrarError(data.error || 'Error del servidor');
+            }
+            else if (data.type === 'move_result') {
+                console.log('Resultado del movimiento:', data);
+                if (data.success) {
+                    // El estado debería venir en data.game_state
+                    if (data.game_state) {
+                        procesarEstadoJuego(data.game_state);
+                    }
+                } else {
+                    mostrarError(data.error || 'Movimiento inválido');
+                    // Re-habilitar la interfaz si el movimiento falló
+                    puedeJugarActual = true;
+                    actualizarInterfazUsuario();
+                }
+            }
+            else {
+                console.log('Tipo de mensaje no manejado específicamente:', data.type);
+                // Intentar procesar como estado de juego directo
+                if (data.estado_juego || data.tablero) {
+                    procesarEstadoJuego(data);
+                }
+            }
+        }
+
+        function procesarMensajeTexto(mensajeTexto) {
+            console.log('Procesando mensaje como texto:', mensajeTexto);
+            try {
+                // Intentar extraer JSON si está embebido en texto
+                const jsonMatch = mensajeTexto.match(/\{.*\}/);
+                if (jsonMatch) {
+                    const data = JSON.parse(jsonMatch[0]);
+                    procesarMensajeWebSocket(data);
+                }
+            } catch (error) {
+                console.error('No se pudo procesar el mensaje como texto estructurado');
+            }
+        }
+
+        function procesarEstadoJuego(estado) {
+            console.log('=== PROCESANDO ESTADO DEL JUEGO ===');
+            console.log('Estado recibido:', estado);
+            
+            if (!estado) {
+                console.error('Estado del juego no disponible');
+                return;
+            }
+
+            // Actualizar información del juego
+            actualizarElementoTexto('propietario', estado.propietario ? estado.propietario + ' (X)' : '{{ juego.propietario.username }} (X)');
+            actualizarElementoTexto('jugador-o', estado.jugador_o || 'Esperando...');
+            actualizarElementoTexto('estado-juego', estado.estado_juego || '{{ juego.estado_juego }}');
+            actualizarElementoTexto('turno-actual', estado.jugador_actual || '{{ juego.jugador_actual }}');
+
+            // Actualizar estado del juego
+            juegoActivo = estado.estado_juego === 'ACTIVO';
+            puedeJugarActual = estado.puede_jugar || false;
+
+            console.log('Juego activo actualizado:', juegoActivo);
+            console.log('Puede jugar actualizado:', puedeJugarActual);
+
+            // Actualizar tablero
+            if (estado.tablero && Array.isArray(estado.tablero)) {
+                console.log('Actualizando tablero:', estado.tablero);
+                actualizarTableroVisual(estado.tablero);
+            }
+
+            // Actualizar interfaz de usuario
+            actualizarInterfazUsuario(estado);
+        }
+
+        function actualizarTableroVisual(tableroArray) {
+            if (!tableroJuego) {
+                console.error('Elemento tablero no encontrado');
+                return;
+            }
+
+            console.log('Actualizando tablero visual');
+            const botones = tableroJuego.querySelectorAll('.casilla');
+            console.log('Botones encontrados:', botones.length);
+            
+            let cambios = 0;
+            
+            botones.forEach((boton, index) => {
+                const fila = Math.floor(index / 3);
+                const columna = index % 3;
+                
+                if (fila < tableroArray.length && columna < tableroArray[fila].length) {
+                    const valor = tableroArray[fila][columna];
+                    const valorActual = boton.textContent.trim();
+                    
+                    // Solo actualizar si cambió
+                    if ((valor === 'X' || valor === 'O') && valorActual !== valor) {
+                        console.log('Actualizando casilla [' + fila + ',' + columna + ']:', valor);
+                        
+                        // Actualizar contenido
+                        boton.textContent = valor;
+                        
+                        // Actualizar clases
+                        boton.classList.remove('x', 'o');
+                        if (valor === 'X') {
+                            boton.classList.add('x');
+                        } else if (valor === 'O') {
+                            boton.classList.add('o');
+                        }
+                        
+                        cambios++;
+                    }
+                    
+                    // Actualizar estado disabled basado en el estado actual del juego
+                    const estaVacia = valor === ' ' || valor === '' || valor === null;
+                    const puedeInteractuar = juegoActivo && puedeJugarActual && estaVacia;
+                    
+                    boton.disabled = !estaVacia || !puedeInteractuar;
+                }
+            });
+
+            console.log('Tablero actualizado. Cambios realizados:', cambios);
+            
+            // Re-inicializar event listeners si hubo cambios
+            if (cambios > 0) {
+                setTimeout(function() {
+                    if (!eventListenersInicializados) {
+                        inicializarEventListeners();
+                    }
+                }, 100);
+            }
+        }
+
+        function actualizarInterfazUsuario(estado) {
+            // Mostrar/ocultar mensaje de turno
+            if (mensajeTurno) {
+                if (juegoActivo && puedeJugarActual) {
+                    mensajeTurno.classList.remove('hidden');
+                    mensajeTurno.textContent = '¡Es tu turno! Haz clic en una casilla vacía';
+                    console.log('Mostrando mensaje de turno');
+                } else {
+                    mensajeTurno.classList.add('hidden');
+                    console.log('Ocultando mensaje de turno');
+                }
+            }
+
+            // Mostrar mensaje de ganador o empate
+            if (mensajeGanador) {
+                if (estado.ganador) {
+                    let mensaje = '';
+                    
+                    if (estado.ganador === 'Empate') {
+                        mensaje = '¡Empate! Nadie gana esta vez.';
+                    } else {
+                        const ganadorNombre = estado.ganador === 'X' ? 
+                            (estado.propietario || '{{ juego.propietario.username }}') : 
+                            (estado.jugador_o || 'Jugador O');
+                        mensaje = '¡' + ganadorNombre + ' (' + estado.ganador + ') ha ganado el juego!';
+                    }
+                    
+                    mensajeGanador.textContent = mensaje;
+                    mensajeGanador.classList.remove('hidden');
+                    juegoActivo = false;
+                    console.log('Mostrando mensaje de ganador:', mensaje);
+                } else {
+                    mensajeGanador.classList.add('hidden');
+                }
+            }
+        }
+
+        function hacerMovimientoWebSocket(fila, columna, boton) {
+            console.log('=== ENVIANDO MOVIMIENTO ===');
+            console.log('Fila:', fila, 'Columna:', columna);
+            console.log('Posicion calculada (0-8):', fila * 3 + columna);
+            
+            // Deshabilitar temporalmente el botón para prevenir múltiples clicks
+            if (boton) {
+                boton.disabled = true;
+            }
+
+            // Calcular posición (0-8)
+            const posicion = fila * 3 + columna;
+            
+            console.log('Enviando posicion:', posicion);
+            
+            const mensaje = {
+                type: 'make_move',
+                position: posicion
+            };
+            
+            console.log('Mensaje enviado:', mensaje);
+            
+            try {
+                gameSocket.send(JSON.stringify(mensaje));
+                console.log('Movimiento enviado al servidor');
+                
+                // Deshabilitar temporalmente la interfaz hasta que llegue la respuesta
+                puedeJugarActual = false;
+                actualizarInterfazUsuario();
+                
+            } catch (error) {
+                console.error('Error enviando movimiento:', error);
+                // Re-habilitar el botón si falló el envío
+                if (boton) {
+                    boton.disabled = false;
+                }
+                puedeJugarActual = true;
+                mostrarError('Error enviando movimiento: ' + error.message);
+            }
+        }
+
+        function actualizarEstadoConexion(conectado) {
+            if (conexionStatus) {
+                if (conectado) {
+                    conexionStatus.textContent = 'Conectado (WebSocket)';
+                    conexionStatus.className = 'estado-conexion conectado';
+                    console.log('Estado conexion: Conectado');
+                } else {
+                    conexionStatus.textContent = 'Desconectado';
+                    conexionStatus.className = 'estado-conexion desconectado';
+                    console.log('Estado conexion: Desconectado');
+                }
+            }
+        }
+
+        function actualizarElementoTexto(id, texto) {
+            const elemento = document.getElementById(id);
+            if (elemento && texto !== undefined) {
+                elemento.textContent = texto;
+                console.log('Actualizado elemento ' + id + ':', texto);
+            }
+        }
+
+     
+
+        function manejarConexionOnline() {
+            console.log('Navegador conectado a internet');
+            if (!gameSocket || gameSocket.readyState === WebSocket.CLOSED) {
+                conectarWebSocket();
+            }
+        }
+
+        function manejarConexionOffline() {
+            console.log('Navegador desconectado de internet');
+            actualizarEstadoConexion(false);
+        }
+
+        // Función para debug: forzar actualización del estado
+        function solicitarEstadoActual() {
+            if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
+                gameSocket.send(JSON.stringify({
+                    type: 'get_state'
+                }));
+                console.log('Solicitando estado actual del juego');
+            }
+        }
+    </script>
+</body>
 </html>

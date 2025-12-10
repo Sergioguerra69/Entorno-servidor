@@ -14,7 +14,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.security.websocket import AllowedHostsOriginValidator
 from games.routing import websocket_urlpatterns
 
-# CAMBIAR myproject por PROJECTNAME
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PROJECTNAME.settings")
 
 django_asgi_app = get_asgi_application()

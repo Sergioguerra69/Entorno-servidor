@@ -31,7 +31,7 @@ def lista_juegos(request):
 def detalle_juego(request, nombre_sala):
     juego = get_object_or_404(Juego, nombre_sala=nombre_sala)
     
-    # Variables de estado CORREGIDAS
+    # Variables de estado 
     es_jugador_x = request.user == juego.propietario
     es_jugador_o = juego.jugador_o and request.user == juego.jugador_o
     es_jugador_en_partida = es_jugador_x or es_jugador_o

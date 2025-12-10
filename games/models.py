@@ -29,12 +29,15 @@ class Juego(models.Model):
     
     def verificar_ganador(self):
         t = self.tablero
+         #Verificar filas
         for i in range(0, 9, 3):
             if t[i] != ' ' and t[i] == t[i+1] == t[i+2]:
                 return t[i]
+             #Verificar columnas
         for i in range(3):
             if t[i] != ' ' and t[i] == t[i+3] == t[i+6]:
                 return t[i]
+            #Verifica diagonales
         if t[0] != ' ' and t[0] == t[4] == t[8]:
             return t[0]
         if t[2] != ' ' and t[2] == t[4] == t[6]:
