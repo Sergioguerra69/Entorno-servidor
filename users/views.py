@@ -38,3 +38,4 @@ def logout_view(request):
         logout(request)
         return redirect('users:home')
     return redirect('users:home')
+ 

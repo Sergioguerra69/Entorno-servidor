@@ -1,5 +1,6 @@
-from pathlib import Path
 import os
+from pathlib import Path
+from decouple import config  
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -14,18 +15,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'daphne',
+    'channels',
     'django.contrib.staticfiles',
-    'miproyecto',  
+    'miproyecto',
     'tailwind',
     'juegos',
-    'theme', 
+    'theme',
     'users',
-    'channels',
     'productos',
     'games',
-    'django_browser_reload',
     'rest_framework',
     'api',
+    'chatbot',
+    'django_browser_reload',
+    'chistes',
 ]
 
 MIDDLEWARE = [
@@ -36,7 +39,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "django_browser_reload.middleware.BrowserReloadMiddleware"
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'PROJECTNAME.urls'
@@ -57,22 +60,12 @@ TEMPLATES = [
     },
 ]
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-       
-    },
-}
-WSGI_APPLICATION = 'PROJECTNAME.wsgi.application'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-TAILWIND_APP_NAME = 'theme'
-TAILWIND_APP_NAME = 'miproyecto'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -88,13 +81,25 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = '/games/'
+
+TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "C:/Users/Usuario/Downloads/Colegio/2ºaño/entorno cliente/npm.cmd"
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-ASGI_APPLICATION = 'PROJECTNAME.asgi.application'
-LOGIN_REDIRECT_URL = 'users:home'
 
-FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
+ASGI_APPLICATION = 'PROJECTNAME.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+
+
+GEMINI_API_KEY = config('GEMINI_API_KEY', default='AIzaSyCXkOQScszVJY6f_tPfrMRW0Q2Gj9dQ6X0')

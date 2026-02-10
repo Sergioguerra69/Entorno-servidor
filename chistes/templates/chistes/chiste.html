@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chiste Aleatorio</title>
+</head>
+<body style="font-family: Arial; text-align: center; padding: 50px;">
+    <h1>Chiste Aleatorio</h1>
+    
+    {% if tiene_error %}
+        <p style="color: red;">Error: No se pudo obtener el chiste</p>
+    {% else %}
+        <div style="border: 2px solid blue; padding: 20px; margin: 30px auto; max-width: 600px;">
+            <p style="font-size: 1.2em; font-weight: bold;">{{ chiste.setup }}</p>
+            <p style="font-size: 1.4em; color: red; margin-top: 20px;">{{ chiste.punchline }}</p>
+            
+            <p style="color: gray; margin-top: 20px;">
+                Tipo: {{ chiste.type }} | ID: {{ chiste.id }}
+            </p>
+        </div>
+    {% endif %}
+    
+    <button onclick="location.reload()" 
+            style="background: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+        Nuevo chiste
+    </button>
+    
+    <p style="margin-top: 40px; color: #666;">
+        Tarea 13 - Uso de API Externa<br>
+        API: https://official-joke-api.appspot.com
+    </p>
+</body>
+</html>
