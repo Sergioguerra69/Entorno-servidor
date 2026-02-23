@@ -2,6 +2,7 @@ from django.shortcuts import render
 import google.generativeai as genai
 
 def chat_view(request):
+    #si quieres ocultar la api tendrias que hacelo por .env
     API_KEY = "AIzaSyBVUqv5Y9WYM9UOCYUiMkmB_6KC2EpNAEE"
     
     # Si el usuario quiere ver el chat (GET)
@@ -26,8 +27,8 @@ def chat_view(request):
                     'prompt_usuario': pregunta
                 })
                 
-            except Exception as e:
-                # algo falló :(
+            except Exception as e: #cualquier error dentro de try
+                # algo falló
                 return render(request, 'chatbot/chat.html', {
                     'respuesta': f"Error: {str(e)[:100]}",
                     'prompt_usuario': pregunta

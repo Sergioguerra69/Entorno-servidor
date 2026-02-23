@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     'games',
     'rest_framework',
     'api',
-    'chatbot',
+    'chatbot', #chatbot
     'django_browser_reload',
     'chistes',
 ]

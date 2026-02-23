@@ -54,7 +54,7 @@ def error_update(request, id):
     except ErrorReport.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    # PUT = ACTUALIZAR
+    # put
     if request.method == 'PUT':
         serialized_data = ErrorSerializer(error_obj, data=request.data)
         if serialized_data.is_valid():
@@ -62,7 +62,7 @@ def error_update(request, id):
             return Response(serialized_data.data)#saca el JSON del serializer
         return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    # DELETE = BORRAR
+    # delete
     if request.method == 'DELETE':
         error_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
